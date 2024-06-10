@@ -1,3 +1,5 @@
+import { getAllVelibs } from "./velib.js";
+
 //Les icones utilisés sur la map
 var mapIcons = L.Icon.extend({
     options: {
