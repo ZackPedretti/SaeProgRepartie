@@ -1,51 +1,49 @@
 import { getAllVelibs} from "./velib.js";
 
-//Les icones utilisés sur la map
+const zoomMap = 12;
+
+//Template des icones utilisés sur la map
 var mapIcons = L.Icon.extend({
     options: {
-        iconSize:     [30, 30],
-        iconAnchor:   [22, 94], 
-        popupAnchor:  [-3, -76]
+        iconSize:     [30, 40],
+        iconAnchor:   [8, 38], 
+        popupAnchor:  [6, -35]
     }
 });
 
 //STATIONS VELIB
-//Récuperation des stations velib à jour
-getAllVelibs()
-.then(stationsVelib => {
-    for (var velib of stationsVelib) {
-        console.log(velib);
-    }
-})
-
-var velibIcon = new mapIcons({iconUrl: 'images/logo-velib.png'})
-var stationJson = {
-    "address": "",
-    "capacity": 0,
-    "lat": 0,
-    "lon": 0,
-    "name": "",
-    "station_id": ""
-}
-var stations = [];
-for (var i = 0; i < 10; i++) {
-    let station = structuredClone(stationJson);
-    station.address = "a";
-    station.capacity = Math.round(Math.random()*50);
-    station.lat = 48.692054 + (Math.random()-0.5)*0.05;
-    station.lon = 6.184417 + (Math.random()-0.5)*0.05;
-    station.name = "b";
-    station.station_id = i;
-    stations.push(station);
-}
+//Icones velib
+var emptyStationVelibIcon = new mapIcons({iconUrl: 'images/emptyStationVelibIcon.svg'}) //323 x 388 px
+var fewPlacesStationVelibIcon = new mapIcons({iconUrl: 'images/fewPlacesStationVelibIcon.svg'})
+var fullStationVelibIcon = new mapIcons({iconUrl: 'images/fullStationVelibIcon.svg'})
 //Groupe des markers des stations velib
 var stationMarkers = L.layerGroup();
-stations.forEach(function (item, index, array) {
-    L.marker([item.lat, item.lon], {icon: velibIcon}).addTo(stationMarkers).bindPopup(`<h1> ${item.name} </h1>`);
+getAllVelibs()
+.then(stationsVelib => {
+    console.log(stationsVelib);
+    stationsVelib.forEach(function (station, index, array) {
+        //Icon d'une couleur différente en fonction du nombre de place disponible
+        if (station.bikesAvailable == 0) {
+            var iconStation = emptyStationVelibIcon;
+        }
+        else if (station.bikesAvailable < 5) {
+            var iconStation = fewPlacesStationVelibIcon;
+        }
+        else {
+            var iconStation = fullStationVelibIcon;
+        }
+        L.marker([station.lat, station.lon], {icon: iconStation}).addTo(stationMarkers).bindPopup(
+            `<h1> ${station.stationName} </h1>
+            <h2> ${station.address} </h2>
+            <p> Nombre de vélos disponibles : ${station.bikesAvailable} </p>
+            <p> Nombre de docks disponibles : ${station.docksAvailable} </p>
+            <p> Capacité : ${station.capacity} </p>`);
+    });
 });
 
+
 //RESTAURANTS
-var restaurantIcon = new mapIcons({iconUrl: 'images/logo-restaurant.png'})
+var restaurantIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'})
 var restaurantJson = {
     "restaurant_id": "",
     "name": "",
@@ -68,7 +66,7 @@ for (var i = 0; i < 10; i++) {
 }
 //Groupe des markers des restaurants
 var restaurantMarkers = L.layerGroup();
-restaurants.forEach(function (item, index, array) {
+restaurants.forEach(function (item) {
     L.marker([item.lat, item.lon], {icon: restaurantIcon}).addTo(restaurantMarkers).bindPopup(`s<h1> ${item.name} </h1>`);
 });
 
@@ -79,12 +77,24 @@ var mapType1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 var mapType2 = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
     maxZoom: 20,
-    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'});
+    attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+});
+var mapType3 = L.tileLayer('//{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+    attribution: 'donn&eacute;es &copy; <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+    minZoom: 1,
+    maxZoom: 20
+});
+var mapType4 = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+});
 
 //Les types de map
 var baseMaps = {
     "OpenStreetMap": mapType1,
-    "OpenStreetMap.HOT": mapType2
+    "OpenStreetMap.HOT": mapType2,
+    "OpenStreetMap.OSM": mapType3,
+    "Google Map Sattelite": mapType4
 };
 
 //Les groupes de markers
@@ -94,7 +104,7 @@ var overlayMaps = {
 };
 
 //Construction de la map avec des données de base (centrée sur Nancy avec la type de map 1 et uniquement les stations d'affichées)
-var map = L.map('map', {center: [48.692054, 6.184417], zoom: 12, layers: [mapType1, stationMarkers]});
+var map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, stationMarkers]});
 
 //Ajout des différents types de map et objets à choisir d'afficher
 L.control.layers(baseMaps, overlayMaps).addTo(map);

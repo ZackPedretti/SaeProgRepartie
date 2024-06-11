@@ -1,4 +1,8 @@
 #map { 
-    height: 400px;
-    width: 50%;
+    height: 800px;
+    width: 80%;
+}
+
+#h1 {
+    align-self: center;
 }
