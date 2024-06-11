@@ -1,3 +1,4 @@
+//Classe représentant une station de velib avec ses attributs
 export class StationVelib {
     constructor(systemName, language, systemId, address, capacity, lat, lon, stationId, stationName, bikesAvailable, docksAvailable) {
         this.systemName = systemName;
@@ -58,6 +59,7 @@ async function getStationStatusLink() {
     return await getInfoLink(2);
 }
 
+//Fonction de récuperation de la liste des stations de velib
 export async function getAllVelibs() {
     const velibs = [];
 

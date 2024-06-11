@@ -1,4 +1,4 @@
-import { getAllVelibs } from "./velib.js";
+import { getAllVelibs} from "./velib.js";
 
 //Les icones utilisés sur la map
 var mapIcons = L.Icon.extend({
@@ -10,6 +10,14 @@ var mapIcons = L.Icon.extend({
 });
 
 //STATIONS VELIB
+//Récuperation des stations velib à jour
+getAllVelibs()
+.then(stationsVelib => {
+    for (var velib of stationsVelib) {
+        console.log(velib);
+    }
+})
+
 var velibIcon = new mapIcons({iconUrl: 'images/logo-velib.png'})
 var stationJson = {
     "address": "",
