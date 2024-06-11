@@ -60,7 +60,7 @@ async function getStationStatusLink() {
 }
 
 //Fonction de récuperation de la liste des stations de velib
-export async function getAllVelibs() {
+async function getAllVelibsAsync() {
     const velibs = [];
 
     const systemInfoLink = await getSystemInfoLink();
@@ -78,7 +78,7 @@ export async function getAllVelibs() {
             throw new Error(`Erreur HTTP ! statut : ${systemResponse.status}`);
         }
         const systemData = await systemResponse.json();
-        const { name: systemName, language, system_id: systemId } = systemData.data;
+        const {name: systemName, language, system_id: systemId} = systemData.data;
 
         const stationInfoResponse = await fetch(stationInfoLink);
         if (!stationInfoResponse.ok) {
@@ -107,9 +107,21 @@ export async function getAllVelibs() {
                 ));
             }
         }
-    } catch (error) {
-        console.error(`Erreur lors de la récupération des données : ${error}`);
+    } catch (e) {
+        console.error(`Erreur lors de la récupération des stations de vélibs : ${e}`);
     }
 
     return velibs;
+}
+
+export function getAllVelibs() {
+    let velibStations = [];
+    getAllVelibsAsync()
+        .then((r) => {
+            velibStations = r;
+        })
+        .catch((e) =>{
+            console.error(`Erreur lors de la récupération des stations de vélibs : ${e}`);
+        })
+    return velibStations;
 }
