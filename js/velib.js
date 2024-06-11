@@ -60,7 +60,7 @@ async function getStationStatusLink() {
 }
 
 //Fonction de récuperation de la liste des stations de velib
-async function getAllVelibsAsync() {
+export async function getAllVelibs() {
     const velibs = [];
 
     const systemInfoLink = await getSystemInfoLink();
@@ -112,16 +112,4 @@ async function getAllVelibsAsync() {
     }
 
     return velibs;
-}
-
-export function getAllVelibs() {
-    let velibStations = [];
-    getAllVelibsAsync()
-        .then((r) => {
-            velibStations = r;
-        })
-        .catch((e) =>{
-            console.error(`Erreur lors de la récupération des stations de vélibs : ${e}`);
-        })
-    return velibStations;
 }
