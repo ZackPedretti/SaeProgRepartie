@@ -1,6 +1,5 @@
 import { meteoJson } from "./meteo.js";
 import { getAllVelibs} from "./velib.js";
-import Handlebars from 'handlebars';
 
 const zoomMap = 12;
 
@@ -16,17 +15,90 @@ var mapIcons = L.Icon.extend({
 meteoJson()
 .then(JSON => {
     console.log(JSON);
+    var tableMeteo = 
+    `<table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Heure</th>
+                <th></th>
+                <th>Température</th>
+                <th>Direction du vent</th>
+                <th>Vent moyen</th>
+                <th>Vent des rafales</th>
+                <th>Humidité</th>
+                <th>Iso Zero</th>
+                <th>Pression</th>
+                <th>CAPE</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
     for (var key in JSON) {
         // Vérifier si la clé est une date (format YYYY-MM-DD HH:mm:ss)
         if (/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(key)) {
-            document.getElementById("cartesMeteo").innerHTML += 
-            `<div id="carte">
-                <h4>${key}</h4>
-                <img src="images/meteo/neige.svg" alt="logo meteo" class="carteImage">
-                <p>Température : ${Math.round(JSON[key].temperature.sol - 273.15)} °C</p>
-            </div>`;
+            //Différents types de météo
+            var image = "";
+            if (JSON[key]["risque_neige"] == "oui") {
+                image = "neige.svg";
+            }
+            else if (JSON[key]["pluie"] > 1) {
+                image = "pluie.svg"
+            }
+            else if (JSON[key]["nebulosite"]["totale"] > 66) {
+                image = "nuage.svg"
+            }
+            else if (JSON[key]["nebulosite"]["totale"] > 33) {
+                image = "soleil_nuageux.svg"
+            }
+            else {
+                image = "soleil.svg";
+            }
+            //Direction du vent
+            var vent = "";
+            var angle_vent = JSON[key]["vent_direction"]["10m"] - 180;
+            if (angle_vent < 22.5 || angle_vent > 337.5) {
+                vent = "S"
+            }
+            else if (angle_vent < 67.5) {
+                vent = "SW";
+            }
+            else if (angle_vent < 112.5) {
+                vent = "W";
+            }
+            else if (angle_vent < 157.5) {
+                vent = "NW";
+            }
+            else if (angle_vent < 202.5) {
+                vent = "N";
+            }
+            else if (angle_vent < 247.5) {
+                vent = "NE";
+            }
+            else if (angle_vent < 292.5) {
+                vent = "E";
+            }
+            else {
+                vent = "SE";
+            }
+            tableMeteo +=
+            `<tr>
+                <td>${key.slice(0,10)}</td>
+                <td>${key.slice(11,13)}h</td>
+                <td><img src="images/meteo/${image}" alt="logo meteo"></td>
+                <td>${Math.round(JSON[key].temperature.sol - 273.15)} °C</td>
+                <td>${vent}</td>
+                <td>${JSON[key]["vent_moyen"]["10m"]} km/h</td>
+                <td>${JSON[key]["vent_rafales"]["10m"]} km/h</td>
+                <td>${JSON[key]["humidite"]["2m"]} %</td>
+                <td>${JSON[key]["iso_zero"]}</td>
+                <td>${JSON[key]["pression"]["niveau_de_la_mer"]} Pa</td>
+                <td>${JSON[key]["cape"]} m²/s²</td>
+            </tr>`;
         }
     }
+    tableMeteo += "</tbody></table>"
+    document.getElementById("meteo").innerHTML = tableMeteo;
     }
 );
 
