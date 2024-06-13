@@ -1,5 +1,5 @@
 //Classe représentant une station de velib avec ses attributs
-export class StationVelib {
+class StationVelib {
     constructor(systemName, language, systemId, address, capacity, lat, lon, stationId, stationName, bikesAvailable, docksAvailable) {
         this.systemName = systemName;
         this.language = language;

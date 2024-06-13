@@ -2,22 +2,11 @@ const meteoUrl = "https://www.infoclimat.fr/public-api/gfs/json?_ll=48.67103,6.1
 
 // Fonction asynchrone permettant de récupérer le json correspondant à chaque date de l'API
 export async function meteoJson() {
-    // Initialiser un objet pour stocker les dates et les données associées
-    let map = {};
-
-    // Attendre la réponse et extraire les données JSON
-    let response = await fetch(meteoUrl);
-    let json = await response.json();
-
-    // Parcourir les clés de l'objet JSON
-    for (const key in json) {
-        // Vérifier si la clé est une date (format YYYY-MM-DD HH:mm:ss)
-        if (/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(key)) {
-            // Ajouter la date et les données associées à l'objet map
-            map[key] = json[key];
-        }
-    }
-
-    // Retourner l'objet map contenant les dates et les données associées
-    return map;
+    return fetch(meteoUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
 }

@@ -1,4 +1,6 @@
+import { meteoJson } from "./meteo.js";
 import { getAllVelibs} from "./velib.js";
+import Handlebars from 'handlebars';
 
 const zoomMap = 12;
 
@@ -10,6 +12,23 @@ var mapIcons = L.Icon.extend({
         popupAnchor:  [6, -35]
     }
 });
+//Récuperation des données météo JSON
+meteoJson()
+.then(JSON => {
+    console.log(JSON);
+    for (var key in JSON) {
+        // Vérifier si la clé est une date (format YYYY-MM-DD HH:mm:ss)
+        if (/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(key)) {
+            document.getElementById("cartesMeteo").innerHTML += 
+            `<div id="carte">
+                <h4>${key}</h4>
+                <img src="images/meteo/neige.svg" alt="logo meteo" class="carteImage">
+                <p>Température : ${Math.round(JSON[key].temperature.sol - 273.15)} °C</p>
+            </div>`;
+        }
+    }
+    }
+);
 
 //STATIONS VELIB
 //Icones velib
@@ -18,9 +37,9 @@ var fewPlacesStationVelibIcon = new mapIcons({iconUrl: 'images/fewPlacesStationV
 var fullStationVelibIcon = new mapIcons({iconUrl: 'images/fullStationVelibIcon.svg'})
 //Groupe des markers des stations velib
 var stationMarkers = L.layerGroup();
+//Récupération des donées des sations velib JSON
 getAllVelibs()
 .then(stationsVelib => {
-    console.log(stationsVelib);
     stationsVelib.forEach(function (station, index, array) {
         //Icon d'une couleur différente en fonction du nombre de place disponible
         if (station.bikesAvailable == 0) {

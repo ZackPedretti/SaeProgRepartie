@@ -1,8 +1,34 @@
+#objets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 #map { 
-    height: 800px;
+    height: 400px;
     width: 80%;
 }
 
-#h1 {
-    align-self: center;
-}
+#cartesMeteo {
+    height: 250px;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    scrollbar-color: rgb(124, 124, 124) rgb(255, 255, 255);
+    scrollbar-width: thin;
+  }
+  
+.carte {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 200px;
+  }
+
+.carteImage {
+    width: 50%;
+    height: 50%;
+  }
