@@ -10,25 +10,10 @@ import java.rmi.RemoteException;
 
 public class LancerRestaurant implements ServiceRestaurant
 {
-    public static void main(String[] args)
+
+    Connection c = this.connecterBD();
+    public  String getRestaurants() throws RemoteException
     {
-        LancerRestaurant lr = new LancerRestaurant();
-        lr.connecterBD();
-        try
-        {
-            Registry re = LocateRegistry.createRegistry(3505);
-            ServiceRestaurant sr = new LancerRestaurant();
-            sr = (ServiceRestaurant) UnicastRemoteObject.exportObject(sr, 0);
-            re.rebind("restaurant", sr);
-            System.out.println("Service lancé");
-        } catch (RemoteException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    public String getRestaurants() throws RemoteException
-    {
-        Connection c = this.connecterBD();
         StringBuilder sb = new StringBuilder("{\n\t\"Restaurants\": \n\t[\n");
         try
         {
@@ -36,7 +21,7 @@ public class LancerRestaurant implements ServiceRestaurant
             ResultSet rs = st.executeQuery();
             while (rs.next())
             {
-                sb.append("\t\t\"Restaurant\": \n\t\t{\n");
+                sb.append("\t\t{\n");
                 sb.append("\t\t\t\"id\": "+rs.getInt(1)+",\n");
                 sb.append("\t\t\t\"nom\": \""+rs.getString(2)+"\",\n");
                 sb.append("\t\t\t\"adresse\": \""+rs.getString(3)+"\",\n");
@@ -57,7 +42,6 @@ public class LancerRestaurant implements ServiceRestaurant
 
     public String reserverRestaurant(int id, String date, int nbPers) throws RemoteException
     {
-        Connection c = this.connecterBD();
         return "";
     }
 
@@ -89,5 +73,20 @@ public class LancerRestaurant implements ServiceRestaurant
             throw new Error("un probeme est arrive lors de la connexion");
         }
         return connection;
+    }
+
+    public static void main(String[] args)
+    {
+        try
+        {
+            Registry re = LocateRegistry.createRegistry(3505);
+            ServiceRestaurant sr = new LancerRestaurant();
+            sr = (ServiceRestaurant) UnicastRemoteObject.exportObject(sr, 0);
+            re.rebind("restaurant", sr);
+            System.out.println("Service lancé");
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
