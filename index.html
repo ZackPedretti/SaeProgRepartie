@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>index td8 : fetch</title>
-  <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  </head>
+    <meta charset="UTF-8">
+    <title>index td8 : fetch</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+</head>
 <body>
+<main id="objets">
+    <div id="map"></div>
+    <p>Cliquez n'importe où sur la carte pour ajouter un nouveau restaurant</p>
+    <div id="controls">
+        <select id="date-select"></select>
+        <select id="hour-select"></select>
+        <div id="buttons-container"></div>
+    </div>
+    <div id="meteo"></div>
+</main>
 
-	<main id="objets">
-        <div id="map"></div>
-        <p>Cliquez n'importe où sur la carte pour ajouter un nouveau restaurant</p>
-        <div id="meteo"></div>
-	</main>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>  
-    <script src="https://unpkg.com/leaflet-plugins/layer/tile/Google.js" defer></script>
-    <script src='js/index.js' type="module" defer ></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<script src="https://unpkg.com/leaflet-plugins/layer/tile/Google.js" defer></script>
+<script src='js/index.js' type="module" defer></script>
 </body>
 </html>

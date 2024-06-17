@@ -1,3 +1,7 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 #objets {
   display: flex;
   flex-direction: column;
@@ -48,3 +52,10 @@ img {
   height: auto;
   display: block;
 }
+
+#buttons {
+  display: flex; /* Utilisation de flexbox pour aligner les boutons horizontalement */
+  gap: 10px; /* Espacement entre les boutons */
+  margin-bottom: 20px; /* Marge en bas pour un espacement visuel */
+}
+
