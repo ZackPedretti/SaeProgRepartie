@@ -64,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         meteoHeader.innerHTML = `
-        <h1>Météo</h1>
         <img src="images/meteo/${image}" alt="logo meteo">
         `
 
