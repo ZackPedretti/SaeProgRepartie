@@ -24,7 +24,7 @@ thead th {
 }
 
 img {
-  width: 80px;
+  width: 200px;
   height: auto;
   display: block;
 }
@@ -33,16 +33,15 @@ img {
   padding: 1em;
 }
 
-thead th {
-  position: sticky;
-  top: 0;
-  background: #f1f1f1;
-  z-index: 2;
+#meteoHeader{
+  padding: 2em;
 }
 
-tbody td:first-child, thead th:first-child {
-  position: sticky;
-  left: 0;
-  background: #f1f1f1;
-  z-index: 1;
+#controls{
+  padding: 2em;
+}
+
+#controls select{
+  font-size: 2em;
+  margin-right: 1em;
 }

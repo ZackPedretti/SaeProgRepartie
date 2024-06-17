@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let weatherData; // Variable pour stocker les données météorologiques
     const dateSelect = document.getElementById("date-select");
     const meteoContainer = document.getElementById("meteo");
+    const meteoHeader = document.getElementById("meteoHeader")
     const hourSelect = document.getElementById("hour-select"); // Sélection de l'élément hour-select
 
     // Fonction pour générer le tableau HTML pour une date spécifique et heure spécifique
@@ -62,37 +63,22 @@ document.addEventListener("DOMContentLoaded", function () {
             vent = "SE";
         }
 
+        meteoHeader.innerHTML = `
+        <h1>Météo</h1>
+        <img src="images/meteo/${image}" alt="logo meteo">
+        `
+
         // Générer le tableau HTML
         // Insérer le tableau HTML dans meteoContainer
         meteoContainer.innerHTML = `
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Température</th>
-                    <th>Direction du vent</th>
-                    <th>Vent moyen</th>
-                    <th>Vent des rafales</th>
-                    <th>Humidité</th>
-                    <th>Iso Zero</th>
-                    <th>Pression</th>
-                    <th>CAPE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <img src="images/meteo/${image}" alt="logo meteo">
-                    <td>${Math.round(weather.temperature.sol - 273.15)} °C</td>
-                    <td>${vent}</td>
-                    <td>${weather["vent_moyen"]["10m"]} km/h</td>
-                    <td>${weather["vent_rafales"]["10m"]} km/h</td>
-                    <td>${weather["humidite"]["2m"]} %</td>
-                    <td>${weather["iso_zero"]} m</td>
-                    <td>${weather["pression"]["niveau_de_la_mer"]} Pa</td>
-                    <td>${weather["cape"]} m²/s²</td>
-                </tr>
-            </tbody>
-        </table>
+                    <p>Température : ${Math.round(weather.temperature.sol - 273.15)} °C</p>
+                    <p>Direction du vent : ${vent}</p>
+                    <p>Vent moyen : ${weather["vent_moyen"]["10m"]} km/h</p>
+                    <p>Vent des rafales : ${weather["vent_rafales"]["10m"]} km/h</p>
+                    <p>Humidité : ${weather["humidite"]["2m"]} %</p>
+                    <p>Iso Zero : ${weather["iso_zero"]} m</p>
+                    <p>Pression : ${weather["pression"]["niveau_de_la_mer"]} Pa</p>
+                    <p>CAPE : ${weather["cape"]} m²/s²</p>
         `;
     }
 
