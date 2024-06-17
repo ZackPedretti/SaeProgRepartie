@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -53,9 +54,12 @@ public class ServiceHttp
                         break;
                 }
             }
-            exchange.sendResponseHeaders(200, response.getBytes().length);
+		System.out.println(response);
+//            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+//            exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+            exchange.sendResponseHeaders(200, response.getBytes(StandardCharsets.UTF_8).length);
             OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
+            os.write(response.getBytes(StandardCharsets.UTF_8));
             os.close();
         }
 
@@ -81,7 +85,7 @@ public class ServiceHttp
         public String getTravaux()
         {
             try{
-                Registry re = LocateRegistry.getRegistry("localhost", 1099);
+                Registry re = LocateRegistry.getRegistry("localhost", 3005);
                 ServiceTravaux sr = (ServiceTravaux) re.lookup("travaux");
                 return sr.getTravaux();
             }
