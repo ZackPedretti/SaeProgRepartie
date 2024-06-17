@@ -24,8 +24,7 @@ thead th {
 }
 
 img {
-  width: 200px;
-  height: auto;
+  height: 10em;
   display: block;
 }
 
@@ -44,4 +43,8 @@ img {
 #controls select{
   font-size: 2em;
   margin-right: 1em;
+}
+
+#meteo{
+  font-size: 1.1em;
 }
