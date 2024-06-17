@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.21.5"
   },
   "scripts": {
     "build": "esbuild js/index.js --bundle --sourcemap --target=es2015 --outfile=js/main.js"

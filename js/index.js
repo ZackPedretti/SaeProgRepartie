@@ -1,4 +1,6 @@
 import {meteoJson} from "./meteo.js";
+import {restaurantsJson} from "./restaurants.js";
+import {travauxJson} from "./travaux.js";
 import {getAllVelibs} from "./velib.js";
 
 const zoomMap = 12;
@@ -190,33 +192,40 @@ getAllVelibs()
 
 //RESTAURANTS
 const restaurantIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'});
-const restaurantJson = {
-    "restaurant_id": "",
-    "name": "",
-    "address": "",
-    "codeP": 0,
-    "lat": 0,
-    "lon": 0,
-
-};
-const restaurants = [];
-for (let i = 0; i < 10; i++) {
-    let restaurant = structuredClone(restaurantJson);
-    restaurant.restaurant_id = i;
-    restaurant.name = "y";
-    restaurant.address = "z";
-    restaurant.codeP = 42;
-    restaurant.lat = 48.692054 + (Math.random() - 0.5) * 0.05;
-    restaurant.lon = 6.184417 + (Math.random() - 0.5) * 0.05;
-    restaurants.push(restaurant);
-}
 //Groupe des markers des restaurants
 const restaurantMarkers = L.layerGroup();
-restaurants.forEach(function (item) {
-    L.marker([item.lat, item.lon], {icon: restaurantIcon}).addTo(restaurantMarkers).bindPopup(`s<h1> ${item.name} </h1>`);
-});
+//Récupération des donées des restaurants JSON
+restaurantsJson()
+    .then(table => {
+        console.log(table);
+        table.Restaurants.forEach(function (restaurant, index) {
+            L.marker([restaurant.lat, restaurant.lon], {icon: restaurantIcon}).addTo(restaurantMarkers).bindPopup(
+                `<h1> ${restaurant.nom} </h1>
+                 <p> ${restaurant.adresse}</p>`);
+        });
+    });
 
-//Deux types de map différents
+
+//TRAVAUX
+const travauxIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'});
+//Groupe des markers des travaux
+const travauxMarkers = L.layerGroup();
+travauxJson()
+    .then(travaux => {
+        console.log(travaux);
+        travaux.incidents.forEach(function (travail) {
+            console.log(travail.location.polyline.split(" ")[0]);
+            L.marker([travail.location.polyline.split(" ")[0], travail.location.polyline.split(" ")[1]], {icon: travauxIcon}).addTo(travauxMarkers).bindPopup(
+                `<h1> ${travail.short_description} </h1>
+            <h2> Type : ${travail.type} </h2>
+            <h3> Description : ${travail.description} </h3>
+            <p> Date de début : ${travail.creationtime} </p>
+            <p> Date de fin (peut être) : ${travail.endtime} </p>`
+            );
+        });
+    })
+
+//4 types de map différentes
 const mapType1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '© OpenStreetMap'
@@ -246,23 +255,12 @@ const baseMaps = {
 //Les groupes de markers
 const overlayMaps = {
     "Stations Velib": stationMarkers,
-    "Restaurants": restaurantMarkers
+    "Restaurants": restaurantMarkers,
+    "Travaux": travauxMarkers
 };
 
 //Construction de la map avec des données de base (centrée sur Nancy avec la type de map 1 et uniquement les stations d'affichées)
-const map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, stationMarkers]});
-
-//Point à afficher là où on clique sur la carte
-const popup = L.popup();
-
-function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent(e.latlng.toString())
-        .openOn(map);
-}
-
-map.on('click', onMapClick);
+const map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, travauxMarkers]});
 
 //Ajout des différents types de map et objets à choisir d'afficher
 L.control.layers(baseMaps, overlayMaps).addTo(map);
