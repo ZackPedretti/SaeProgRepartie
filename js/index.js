@@ -11,10 +11,11 @@ var mapIcons = L.Icon.extend({
         popupAnchor:  [6, -35]
     }
 });
+
+//METEO
 //Récuperation des données météo JSON
 meteoJson()
 .then(JSON => {
-    console.log(JSON);
     var tableMeteo = 
     `<table>
         <thead>
@@ -35,8 +36,9 @@ meteoJson()
         <tbody>
     `;
     for (var key in JSON) {
-        // Vérifier si la clé est une date (format YYYY-MM-DD HH:mm:ss)
-        if (/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(key)) {
+        // Vérifier si la clé est une date (format YYYY-MM-DD HH:mm:ss) et que la date est après la date actuelle
+        var date = new Date(key);
+        if (/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(key) && date > Date.now()) {
             //Différents types de météo
             var image = "";
             if (JSON[key]["risque_neige"] == "oui") {
@@ -196,6 +198,18 @@ var overlayMaps = {
 
 //Construction de la map avec des données de base (centrée sur Nancy avec la type de map 1 et uniquement les stations d'affichées)
 var map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, stationMarkers]});
+
+//Point à afficher là où on clique sur la carte
+var popup = L.popup();
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent(e.latlng.toString())
+        .openOn(map);
+}
+
+map.on('click', onMapClick);
 
 //Ajout des différents types de map et objets à choisir d'afficher
 L.control.layers(baseMaps, overlayMaps).addTo(map);
