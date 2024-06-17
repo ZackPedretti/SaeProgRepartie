@@ -4,38 +4,38 @@ body {
 
 #objets {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
-#map { 
-  height: 400px;
-  width: 90%;
+#map {
+  height: 50em;
+  width: 50em;
+  border-radius: 8px;
 }
 
-#meteo {
-  width: 90%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  position: relative;
-}
-
-table {
-  border-collapse: collapse;
-  width: max-content;
-}
-
-th, td {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  white-space: nowrap; 
-  vertical-align: middle;
-}
 
 thead th {
   position: sticky;
   top: 0; 
+  background: #f1f1f1;
+  z-index: 2;
+}
+
+img {
+  width: 80px;
+  height: auto;
+  display: block;
+}
+
+#mapContainer{
+  padding: 1em;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
   background: #f1f1f1;
   z-index: 2;
 }
@@ -46,16 +46,3 @@ tbody td:first-child, thead th:first-child {
   background: #f1f1f1;
   z-index: 1;
 }
-
-img {
-  width: 80px;
-  height: auto;
-  display: block;
-}
-
-#buttons {
-  display: flex; /* Utilisation de flexbox pour aligner les boutons horizontalement */
-  gap: 10px; /* Espacement entre les boutons */
-  margin-bottom: 20px; /* Marge en bas pour un espacement visuel */
-}
-

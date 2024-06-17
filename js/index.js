@@ -63,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Générer le tableau HTML
-        const tableHTML = `
+        // Insérer le tableau HTML dans meteoContainer
+        meteoContainer.innerHTML = `
         <table>
             <thead>
                 <tr>
@@ -80,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </thead>
             <tbody>
                 <tr>
-                    <td><img src="images/meteo/${image}" alt="logo meteo"></td>
+                    <img src="images/meteo/${image}" alt="logo meteo">
                     <td>${Math.round(weather.temperature.sol - 273.15)} °C</td>
                     <td>${vent}</td>
                     <td>${weather["vent_moyen"]["10m"]} km/h</td>
@@ -93,9 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
             </tbody>
         </table>
         `;
-
-        // Insérer le tableau HTML dans meteoContainer
-        meteoContainer.innerHTML = tableHTML;
     }
 
     // Fonction pour mettre à jour la liste déroulante des dates
@@ -176,8 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
-
-
 
 
 //STATIONS VELIB
