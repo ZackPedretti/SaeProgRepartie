@@ -63,22 +63,20 @@ document.addEventListener("DOMContentLoaded", function () {
             vent = "SE";
         }
 
-        meteoHeader.innerHTML = `
-        <img src="images/meteo/${image}" alt="logo meteo">
-        `
 
         // Générer le tableau HTML
         // Insérer le tableau HTML dans meteoContainer
         meteoContainer.innerHTML = `
-                    <p>Température : ${Math.round(weather.temperature.sol - 273.15)} °C</p>
-                    <p>Direction du vent : ${vent}</p>
-                    <p>Vent moyen : ${weather["vent_moyen"]["10m"]} km/h</p>
-                    <p>Vent des rafales : ${weather["vent_rafales"]["10m"]} km/h</p>
-                    <p>Humidité : ${weather["humidite"]["2m"]} %</p>
-                    <p>Iso Zero : ${weather["iso_zero"]} m</p>
-                    <p>Pression : ${weather["pression"]["niveau_de_la_mer"]} Pa</p>
-                    <p>CAPE : ${weather["cape"]} m²/s²</p>
-        `;
+    <img src="images/meteo/${image}" alt="logo meteo">
+    <p>Température : <span>${Math.round(weather.temperature.sol - 273.15)} °C</span></p>
+    <p>Direction du vent : <span>${vent}</span></p>
+    <p>Vent moyen : <span>${weather["vent_moyen"]["10m"]} km/h</span></p>
+    <p>Vent des rafales : <span>${weather["vent_rafales"]["10m"]} km/h</span></p>
+    <p>Humidité : <span>${weather["humidite"]["2m"]} %</span></p>
+    <p>Iso Zero : <span>${weather["iso_zero"]} m</span></p>
+    <p>Pression : <span>${weather["pression"]["niveau_de_la_mer"]} Pa</span></p>
+    <p>CAPE : <span>${weather["cape"]} m²/s²</span></p>
+`;
     }
 
     // Fonction pour mettre à jour la liste déroulante des dates
