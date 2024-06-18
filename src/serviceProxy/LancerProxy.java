@@ -81,7 +81,6 @@ public class LancerProxy implements ServiceProxy
             st = (ServiceProxy) UnicastRemoteObject.exportObject(st, 0);
             re.rebind("travaux", st);
             System.out.println("Service lancé");
-            System.out.println(st.getTravaux());
         } catch (RemoteException e)
         {
             e.printStackTrace();
