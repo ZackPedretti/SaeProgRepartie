@@ -6,8 +6,8 @@ CREATE TABLE RESTAURANTS(
     rst_nom VARCHAR(255) NOT NULL,
     rst_adr varchar(255) NOT NULL,
     rst_codP INT(5) NOT NULL,
-    rst_lon DECIMAL(5,3) NOT NULL,
-    rst_lat DECIMAL(5,3) NOT NULL,
+    rst_lon DECIMAL(8,6) NOT NULL,
+    rst_lat DECIMAL(8,6) NOT NULL,
 	PRIMARY KEY (rst_idrst));
     
 CREATE TABLE TABL (
@@ -26,3 +26,5 @@ CREATE TABLE RESERVATION (
 	rsv_nbpers SMALLINT NOT NULL,
 	PRIMARY KEY (rsv_idrsv, rsv_idtbl),
     FOREIGN KEY (rsv_idtbl) REFERENCES TABL (tbl_idtbl));
+
+INSERT INTO `RESTAURANTS` (`rst_idrst`, `rst_nom`, `rst_adr`, `rst_codP`, `rst_lon`, `rst_lat`) VALUES ('1', 'KEBAB 5 ETOILES', '121 Rue Gabriel Mouilleron', '54000', '6.173026', '48.684509');
