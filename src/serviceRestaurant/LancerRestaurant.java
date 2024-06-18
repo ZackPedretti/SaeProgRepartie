@@ -5,6 +5,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.rmi.RemoteException;
 
@@ -42,7 +46,40 @@ public class LancerRestaurant implements ServiceRestaurant
 
     public String reserverRestaurant(int id, String date, int nbPers) throws RemoteException
     {
-        return "";
+        int meilleureTable = 0;
+        String[] datesplit = date.split("\\+")[0].split("-");
+        LocalDate dateDate = LocalDate.of(Integer.parseInt(datesplit[0]), Integer.parseInt(datesplit[1]), Integer.parseInt(datesplit[2]));
+        String[] heuresplit = date.split("\\+")[1].split(":");
+        LocalTime heureDate = LocalTime.of(Integer.parseInt(heuresplit[0]), Integer.parseInt(heuresplit[1]));
+        LocalDateTime datefinale = LocalDateTime.of(dateDate, heureDate);
+        try {
+            PreparedStatement recupTables = c.prepareStatement("SELECT tbl_idtbl, tbl_plc FROM TABL NATURAL JOIN RESTAURANTS WHERE tbl_plc >= ? AND rst_idrst = ? AND tbl_idtbl IN (SELECT tbl_idtbl FROM TABL LEFT JOIN RESERVATION ON tbl_idtbl = rsv_idtbl WHERE rsv_dat NOT BETWEEN ? AND ? OR rsv_dat IS NULL)");
+            recupTables.setInt(1, nbPers);
+            recupTables.setInt(2, id);
+            recupTables.setTimestamp(3, Timestamp.valueOf(datefinale.minusHours(2)));
+            recupTables.setTimestamp(4, Timestamp.valueOf(datefinale.plusHours(2)));
+            ResultSet resultRecupTables = recupTables.executeQuery();
+            int min = Integer.MAX_VALUE;
+            while (resultRecupTables.next()){
+                int plc = resultRecupTables.getInt(2);
+                if (plc < min){
+                    min = plc;
+                    meilleureTable = resultRecupTables.getInt(1);
+                }
+            }
+            System.out.println("meilleure table : " + meilleureTable);
+            System.out.println("date : " + Timestamp.valueOf(datefinale));
+            System.out.println("nbpers : " + nbPers);
+            PreparedStatement insererRes = c.prepareStatement("INSERT INTO RESERVATION(rsv_idtbl, rsv_dat, rsv_nbpers) VALUES (?, ?, ?)");
+            insererRes.setInt(1, meilleureTable);
+            insererRes.setTimestamp(2, Timestamp.valueOf(datefinale));
+            insererRes.setInt(3, nbPers);
+            insererRes.executeUpdate();
+            c.commit();
+        } catch (SQLException e) {
+            return "Réservation impossible, aucune table disponible";
+        }
+        return "Réservation effectuée";
     }
 
     private Connection connecterBD()
