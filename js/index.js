@@ -280,7 +280,7 @@ const baseMaps = {
     "OpenStreetMap": mapType1,
     "OpenStreetMap.HOT": mapType2,
     "OpenStreetMap.OSM": mapType3,
-    "Google Map Sattelite": mapType4
+    "Google Map Satellite": mapType4
 };
 
 //Les groupes de markers
