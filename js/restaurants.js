@@ -1,4 +1,5 @@
 const restaurantsURL = "http://localhost:8000/restaurant";
+const reservationURL = "http://localhost:8000/reservation";
 
 // Fonction asynchrone permettant de récupérer le json correspondant à chaque date de l'API
 export async function restaurantsJson() {
@@ -13,11 +14,11 @@ export async function restaurantsJson() {
 
 //Fonction pour envoyer une réservation à la BD
 export async function reserverTable(idRestaurant, nbPers, time) {
-    return fetch(restaurantsURL+`/reservation?id=${idRestaurant}&date=${time}&pers=${nbPers}`)
+    return fetch(reservationURL+`?id=${idRestaurant}&date=${time}&pers=${nbPers}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
-            return response;
+            return response.text();
         })
 }

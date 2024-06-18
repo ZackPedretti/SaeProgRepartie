@@ -223,17 +223,12 @@ function reservation(IdRestaurant) {
         // Récupérer les valeurs des champs du formulaire
         const idRst = form.querySelector('input[name="id"]').value;
         const nbPers = form.querySelector('input[name="pers"]').value;
-        const time = form.querySelector('input[name="time"]').value.replace("T", '+');
-
-        // Afficher les valeurs dans la console
-        console.log('ID du Restaurant:', idRst);
-        console.log('Nombre de personnes:', nbPers);
-        console.log('Date de réservation:', time);
+        const time = form.querySelector('input[name="time"]').value.replace("T", "+");
 
         //Requête vers la BD
         reserverTable(idRst, nbPers, time)
             .then(reponse => {
-                console.log(reponse);
+                document.getElementById('reponse').innerHTML = reponse;
             })
     });
 }
