@@ -17,7 +17,7 @@ public class LancerRestaurant implements ServiceRestaurant
         StringBuilder sb = new StringBuilder("{\n\t\"Restaurants\": \n\t[\n");
         try
         {
-            PreparedStatement st = c.prepareStatement("SELECT * FROM RESTAURANT");
+            PreparedStatement st = c.prepareStatement("SELECT * FROM RESTAURANTS");
             ResultSet rs = st.executeQuery();
             while (rs.next())
             {

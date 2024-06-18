@@ -15,6 +15,7 @@ const mapIcons = L.Icon.extend({
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+
     let weatherData; // Variable pour stocker les données météorologiques
     const dateSelect = document.getElementById("date-select");
     const meteoContainer = document.getElementById("meteo");
@@ -191,6 +192,29 @@ getAllVelibs()
 
 
 //RESTAURANTS
+//Fonction pour afficher le formulaire pour réserver une table dans un restaurant
+function reservation(IdRestaurant) {
+    // Supprimez tout formulaire de réservation existant
+    const existingForm = document.getElementById('reservationForm');
+    if (existingForm) {
+        existingForm.remove();
+    }
+
+    // Créez le formulaire en tant que chaîne HTML
+    const formHtml = `
+        <form id="reservationForm" method="GET" action="/reservation">
+            <input type="hidden" name="idRst" value="${IdRestaurant}">
+            <input type="number" name="nbPers" placeholder="Nombre de personnes" required>
+            <input type="date" name="date" required>
+            <button type="submit">Confirmer la réservation</button>
+        </form>
+    `;
+
+    // Ajoute le formulaire au corps du document
+    const formContainer = document.createElement('div');
+    formContainer.innerHTML = formHtml;
+    document.getElementById("formulaire").appendChild(formContainer)
+}
 const restaurantIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'});
 //Groupe des markers des restaurants
 const restaurantMarkers = L.layerGroup();
@@ -199,22 +223,28 @@ restaurantsJson()
     .then(table => {
         console.log(table);
         table.Restaurants.forEach(function (restaurant, index) {
-            L.marker([restaurant.lat, restaurant.lon], {icon: restaurantIcon}).addTo(restaurantMarkers).bindPopup(
+            const marker = L.marker([restaurant.lat, restaurant.lon], {icon: restaurantIcon}).addTo(restaurantMarkers).bindPopup(
                 `<h1> ${restaurant.nom} </h1>
-                 <p> ${restaurant.adresse}</p>`);
+                 <p> ${restaurant.adresse}</p>
+                 <button id="reserve-btn-${restaurant.id}"> Réserver une table </button>`);
+            marker.on('popupopen', () => {
+                const btn = document.getElementById('reserve-btn-'+restaurant.id);
+                btn.addEventListener('click', () => {
+                    reservation(restaurant.id);
+                })
+            })
         });
     });
 
 
 //TRAVAUX
-const travauxIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'});
+const travauxIcon = new mapIcons({iconUrl: 'images/tavauxIcon.svg'});
 //Groupe des markers des travaux
 const travauxMarkers = L.layerGroup();
 travauxJson()
     .then(travaux => {
         console.log(travaux);
         travaux.incidents.forEach(function (travail) {
-            console.log(travail.location.polyline.split(" ")[0]);
             L.marker([travail.location.polyline.split(" ")[0], travail.location.polyline.split(" ")[1]], {icon: travauxIcon}).addTo(travauxMarkers).bindPopup(
                 `<h1> ${travail.short_description} </h1>
             <h2> Type : ${travail.type} </h2>
@@ -224,6 +254,7 @@ travauxJson()
             );
         });
     })
+
 
 //4 types de map différentes
 const mapType1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -260,7 +291,7 @@ const overlayMaps = {
 };
 
 //Construction de la map avec des données de base (centrée sur Nancy avec la type de map 1 et uniquement les stations d'affichées)
-const map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, travauxMarkers]});
+const map = L.map('map', {center: [48.692054, 6.184417], zoom: zoomMap, layers: [mapType1, restaurantMarkers]});
 
 //Ajout des différents types de map et objets à choisir d'afficher
 L.control.layers(baseMaps, overlayMaps).addTo(map);
