@@ -20,7 +20,7 @@ CREATE TABLE TABL (
     FOREIGN KEY (tbl_idrst) REFERENCES RESTAURANTS (rst_idrst));
     
 CREATE TABLE RESERVATION (
-    rsv_idrsv BIGINT NOT NULL, 
+    rsv_idrsv BIGINT NOT NULL AUTO_INCREMENT, 
 	rsv_idtbl BIGINT NOT NULL,
 	rsv_dat DATE NOT NULL, 
 	rsv_nbpers SMALLINT NOT NULL,
