@@ -1,7 +1,8 @@
 import {meteoJson} from "./meteo.js";
-import {restaurantsJson} from "./restaurants.js";
+import {reserverTable, restaurantsJson} from "./restaurants.js";
 import {travauxJson} from "./travaux.js";
 import {getAllVelibs} from "./velib.js";
+import {universitesJson} from "./universties.js";
 
 const zoomMap = 12;
 
@@ -202,10 +203,10 @@ function reservation(IdRestaurant) {
 
     // Créez le formulaire en tant que chaîne HTML
     const formHtml = `
-        <form id="reservationForm" method="GET" action="/reservation">
-            <input type="hidden" name="idRst" value="${IdRestaurant}">
-            <input type="number" name="nbPers" placeholder="Nombre de personnes" required>
-            <input type="date" name="date" required>
+        <form id="reservationForm">
+            <input type="hidden" name="id" value="${IdRestaurant}">
+            <input type="number" name="pers" placeholder="Nombre de personnes" required>
+            <input type="datetime-local" name="time" required>
             <button type="submit">Confirmer la réservation</button>
         </form>
     `;
@@ -213,7 +214,28 @@ function reservation(IdRestaurant) {
     // Ajoute le formulaire au corps du document
     const formContainer = document.createElement('div');
     formContainer.innerHTML = formHtml;
-    document.getElementById("formulaire").appendChild(formContainer)
+    document.getElementById("formulaire").appendChild(formContainer);
+    // Ajoutez un gestionnaire d'événements pour le formulaire
+    const form = document.getElementById('reservationForm');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêche l'envoi du formulaire
+
+        // Récupérer les valeurs des champs du formulaire
+        const idRst = form.querySelector('input[name="id"]').value;
+        const nbPers = form.querySelector('input[name="pers"]').value;
+        const time = form.querySelector('input[name="time"]').value.replace("T", '+');
+
+        // Afficher les valeurs dans la console
+        console.log('ID du Restaurant:', idRst);
+        console.log('Nombre de personnes:', nbPers);
+        console.log('Date de réservation:', time);
+
+        //Requête vers la BD
+        reserverTable(idRst, nbPers, time)
+            .then(reponse => {
+                console.log(reponse);
+            })
+    });
 }
 const restaurantIcon = new mapIcons({iconUrl: 'images/restaurantIcon.svg'});
 //Groupe des markers des restaurants
@@ -255,6 +277,24 @@ travauxJson()
         });
     })
 
+//UNIVERSITES
+const univIcon = new mapIcons({iconUrl: 'images/univsIcon.svg'});
+//Groupe des markers des universités
+const univMarkers = L.layerGroup();
+universitesJson()
+    .then(listeUniv => {
+        console.log(listeUniv);
+        listeUniv.results.forEach(function (univ) {
+            L.marker([univ.coordonnees.lat, univ.coordonnees.lon], {icon: univIcon}).addTo(univMarkers).bindPopup(
+                `<h1> ${univ.implantation_lib} </h1>
+            <h2> Type d'etablissement : ${univ.type_d_etablissement} </h2>
+            <p> Adresse : ${univ.adresse_uai} </p>
+            <p> Effectif : ${univ.effectif} </p>
+            <p> Date d'ouverture : ${univ.date_ouverture} </p>`
+            );
+        });
+    })
+
 
 //4 types de map différentes
 const mapType1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -287,7 +327,8 @@ const baseMaps = {
 const overlayMaps = {
     "Stations Velib": stationMarkers,
     "Restaurants": restaurantMarkers,
-    "Travaux": travauxMarkers
+    "Travaux": travauxMarkers,
+    "Universités": univMarkers
 };
 
 //Construction de la map avec des données de base (centrée sur Nancy avec la type de map 1 et uniquement les stations d'affichées)

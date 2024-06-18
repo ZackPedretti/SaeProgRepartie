@@ -10,3 +10,14 @@ export async function restaurantsJson() {
             return response.json();
         })
 }
+
+//Fonction pour envoyer une réservation à la BD
+export async function reserverTable(idRestaurant, nbPers, time) {
+    return fetch(restaurantsURL+`/reservation?id=${idRestaurant}&date=${time}&pers=${nbPers}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response;
+        })
+}
